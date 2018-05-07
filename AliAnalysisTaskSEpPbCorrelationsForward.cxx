@@ -1519,7 +1519,6 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    selectedFMDArray2->SetOwner(kTRUE);
 
    // Leading Particle
-
    if(fAnaMode=="TPCFMD" || fAnaMode=="TPCTPC" || fAnaMode=="TPCFMDC"){
      selectedTracksLeading = GetAcceptedTracksLeading(fEvent,kTRUE);
      selectedTracksAssociated = GetAcceptedTracksLeading(fEvent,kFALSE);
