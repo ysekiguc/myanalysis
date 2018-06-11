@@ -1,5 +1,5 @@
 {
-  char *gridMode="";
+  char *gridMode="full";
   Bool_t iAODAnalysis =kTRUE;
   Bool_t useMC =kFALSE;
   Bool_t frun2=kTRUE;
@@ -151,15 +151,13 @@ else{
      mgr->SetInputEventHandler(aodHandler);
    }
    
-   if(!TGrid
+//   if(!TGrid
 
 
 
 
 
-
-
-::Connect("alien://","ysekiguc","","-domain=cern.ch")){cout<<"TGrid connection failed"<<endl;return ;}
+	  //::Connect("alien://","ysekiguc","","-domain=cern.ch")){cout<<"TGrid connection failed"<<endl;return ;}
    
 
    if(frun2){

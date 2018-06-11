@@ -2,7 +2,7 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   {
     //  char *data     = "LHC17f2b_fast";
     char *data     = "LHC16q";
-  char *datatype = "FAST"  ;//Fast,wSDD,woSDD
+  char *datatype = "woSDD"  ;//Fast,wSDD,woSDD
   Int_t method   =  1;
   // Check if user has a valid token, otherwise make one. This has limitations.
   // One can always follow the standard procedure of calling alien-token-init then
@@ -11,10 +11,10 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   // if (!AliAnalysisGrid::CreateToken()) return NULL;
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
   plugin->SetOverwriteMode();
-  //   plugin->SetMergeViaJDL(1);
-  // plugin->SetRunMode("full");
-      plugin->SetRunMode("terminate");
-  //  plugin->SetRunMode("test");
+  plugin->SetMergeViaJDL(1);
+  plugin->SetRunMode("full");
+  //        plugin->SetRunMode("terminate");
+  //    plugin->SetRunMode("test");
 
   //Set versions of used packages
  plugin->SetAPIVersion("V1.1x");
@@ -231,15 +231,11 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 
   //  plugin->AddDataFile("/alice/cern.ch/user/y/ysekiguc/correction.root");
 
-  //  plugin->SetGridWorkingDir("LHC16q_26012018");
-  //    plugin->SetGridWorkingDir("FMDFMD_LHC16q_29012018_sec");
-  //plugin->SetGridWorkingDir("FMDFMD_LHC16q_30012018_secA");
-  //  plugin->SetGridWorkingDir("FMDFMD_LHC16q_31012018_secA");
-  
-  //  plugin->SetGridWorkingDir("FMDFMD_LHC16q_01022018_secA_modirybin");
-  //  plugin->SetGridWorkingDir("FMDFMD_LHC16q_05022018_secC_modirybin");
-  //    plugin->SetGridWorkingDir("09042018_FB_secondarycorrectionadded");
-  plugin->SetGridWorkingDir("10042018_FC_tpcetabinadded");
+  //      plugin->SetGridWorkingDir("07052018_FC");
+  //      plugin->SetGridWorkingDir("07052018_FC_woSDD");
+  //  plugin->SetGridWorkingDir("09052018_BC_FAST");
+  //    plugin->SetGridWorkingDir("09052018_BC_woSDD");
+  plugin->SetGridWorkingDir("31052018_BC_woSDD");
   
   // Declare alien output directory. Relative to working directory.
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
