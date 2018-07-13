@@ -1703,31 +1703,6 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    Float_t nFMD_bwd_hits=0;
    AliAODForwardMult*aodForward=static_cast<AliAODForwardMult*>(fEvent->FindListObject("Forward"));
 
-   /*
-   AliForwardCorrectionManager& fcm = AliForwardCorrectionManager::Instance();                                        
-   const AliFMDCorrSecondaryMap*map = fcm.GetSecondaryMap();
-   if(!map) cout<<"no map"<<endl;
-   //   UShort_t uvb = vtxbin;
-   UShort_t uvb = 1;
-    for (UShort_t d=1; d<=3; d++) {                                                                                  
-      UShort_t nr = (d == 1 ? 1 : 2);
-      for (UShort_t q=0; q<nr; q++) {
-        Char_t      r  = (q == 0 ? 'I' : 'O');
-        //       TH2D*       h  = hists.Get(d,r);
-        //       RingHistos* rh = GetRingHistos(d,r);
-        //TH2D*hcorr=map->GetCorrection(d,r,uvb);
-      //  if (!hcorr) {
-       //   AliWarning(Form("No secondary correction for FMDM%d%c in vertex bin %d", d, r, uvb));
-        //  continue;
-       //  }
-
-        //       cout<<hcorr->GetNbinsX()<<endl;
-      }
-    }
-   */
-
-   //    AliFMDCorrSecondaryMap * map= static_cast<const AliFMDCorrSecondaryMap*>(Get(1));
-
  // Shape of d2Ndetadphi: 200, -4, 6, 20, 0, 2pi
    Int_t ivzbin=frefvz->GetXaxis()->FindBin(fPrimaryZVtx);
    const TH2D& d2Ndetadphi = aodForward->GetHistogram();
