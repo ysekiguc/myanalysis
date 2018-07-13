@@ -145,6 +145,7 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       fMaxnSigmaTPCTOF(3.),
       fHistzvertex(0),
       fHistCentrality(0),
+      fHistCentrality_beforecut(0),
       mixedDist(0),
       mixedDist2(0),
       fHistLeadQA(0),      
@@ -157,6 +158,9 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       fh2_FMD_eta_phi_prim(0),
       fh2_FMD_acceptance(0),
       fh2_ITS_acceptance(0),
+      fh2_SPD_multcorr(0),
+      fh2_SPDV0_multcorr(0),
+      fhtrackletsdphi(0),
       fh2_FMD_eta_phi(0),
       fhistfmd(0),
       fhistits(0), 
@@ -324,6 +328,7 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       fMaxnSigmaTPCTOF(3.),
       fHistzvertex(0),
       fHistCentrality(0),
+      fHistCentrality_beforecut(0),
       mixedDist(0),
       mixedDist2(0),
       fHistLeadQA(0),  
@@ -336,6 +341,9 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       fh2_FMD_eta_phi_prim(0),
       fh2_FMD_acceptance(0),
       fh2_ITS_acceptance(0),
+      fh2_SPD_multcorr(0),
+      fh2_SPDV0_multcorr(0),
+      fhtrackletsdphi(0),
       fh2_FMD_eta_phi(0),
       fhistfmd(0),
       fhistits(0),
@@ -544,6 +552,9 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    fHistCentrality = new TH1F("fHistCentrality", ";centrality;count", 20, 0, 100);
    fOutputList->Add(fHistCentrality);
 
+   fHistCentrality_beforecut = new TH1F("fHistCentrality_beforecut", ";centrality;count", 20, 0, 100);
+   fOutputList->Add(fHistCentrality_beforecut);
+   
    TTree *settingsTree = new TTree("UEAnalysisSettings", "Analysis Settings in UE estimation");
    settingsTree->Branch("fZVertex", &fZVertex, "fZVertex/D");
    settingsTree->Branch("fEtaMax", &fEtaMax, "fEtaMax/D");
@@ -698,8 +709,17 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
      fh2_FMD_acceptance=new TH2D("fh2_FMD_acceptance","fh2_FMD_acceptance",200,-4,6,200,-10,10);
      fOutputList2->Add(fh2_FMD_acceptance);
 
-	 fh2_ITS_acceptance=new TH2D("fh2_ITS_acceptance","fh2_ITS_acceptance",200,-4,6,200,-10,10);
+	 fh2_ITS_acceptance=new TH2D("fh2_ITS_acceptance","fh2_ITS_acceptance",200,-10,10,200,-4,6);
      fOutputList2->Add(fh2_ITS_acceptance);
+
+	 fh2_SPD_multcorr=new TH2F("fh2_SPD_multcorr","fh2_SPD_multcorr",400,0,400,2000,0,2000);
+     fOutputList2->Add(fh2_SPD_multcorr);
+
+	 fh2_SPDV0_multcorr=new TH2F("fh2_SPDV0_multcorr","fh2_SPDV0_multcorr",400,0,400,2000,0,4000);
+     fOutputList2->Add(fh2_SPDV0_multcorr);
+	 
+	 fhtrackletsdphi=new TH1F("fhtrackletsdphi","dphi tracklets",100,-100,100);
+	 fOutputList2->Add(fhtrackletsdphi);
 	 
      
 	 fh2_FMD_eta_phi=new TH2D("fh2_FMD_eta_phi","fh2_FMD_eta_phi",200,-4,6,20,0,2*TMath::Pi());
@@ -1539,7 +1559,6 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    AliMultSelection *multSelection =    (AliMultSelection *)fEvent->FindListObject("MultSelection");
    if(!multSelection) return;
    fHist_Stat->Fill(1);
-
    UInt_t maskIsSelected = inEvMain->IsEventSelected();
    Bool_t isSelected     = kFALSE;
    isSelected = ((maskIsSelected & AliVEvent::kINT7) == AliVEvent::kINT7);//Both for data and MC
@@ -1606,12 +1625,12 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    if ( vtxSPD->IsFromVertexerZ() && (zRes > dMaxResol)) return;
    fHist_Stat->Fill(6);
 
-
+   if(fcollisiontype=="pPb") fHistCentrality_beforecut->Fill(lCentrality);
 
    MakeAna();
 
 
-   //if(fcollisiontype=="pPb") fHistCentrality->Fill(lCentrality);
+   
    PostData(1, fOutputList);
    PostData(2, fOutputList1);
    PostData(3, fOutputList2);
@@ -1633,46 +1652,6 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    selectedFMDArray1->SetOwner(kTRUE);
    TObjArray *selectedFMDArray2=new TObjArray;
    selectedFMDArray2->SetOwner(kTRUE);
-
-   // Leading Particle
-   if(fAnaMode=="TPCFMD" || fAnaMode=="TPCTPC" || fAnaMode=="TPCFMDC"){
-     selectedTracksLeading = GetAcceptedTracksLeading(fEvent,kTRUE);
-     selectedTracksAssociated = GetAcceptedTracksLeading(fEvent,kFALSE);
-     /*
-   if (fasso == "Phi")    selectedTracksAssociated = GetAcceptedTracksAssociated(fEvent);
-   if (fasso == "V0")    selectedTracksAssociated = GetAcceptedV0Tracks(fEvent);
-   if (fasso == "PID")    selectedTracksAssociated = GetAcceptedTracksPID(fEvent);
-   if (fasso == "Cascade")    selectedTracksAssociated = GetAcceptedCascadeTracks(fEvent);
-     */
-   }else if(fAnaMode=="ITSFMD" || fAnaMode=="ITSFMDC"){
-	 AliAODTracklets *tracklets = ((AliAODEvent*)fEvent)->GetTracklets();
-	 if (!tracklets) return;
-	 Int_t nTracklets = tracklets->GetNumberOfTracklets();
-	 
-	 for (Int_t i = 0; i < nTracklets; i++) {
-	   Double_t dphi  = tracklets->GetDeltaPhi(i);
-	   
-	   if (TMath::Abs(dphi) * 1000 > 5) {
-		 continue;
-	   }
-	   
-	   Double_t theta = tracklets->GetTheta(i);
-	   Double_t etaits   = -TMath::Log(TMath::Tan(theta/2));
-	   // Drop everything outside of -1.7 < eta 1.7 to avoid overlas with the FMD
-	   if (etaits < -1.7 || etaits > 1.7) {
-		 continue;
-	   }
-	   Double_t phiits   = tracklets->GetPhi(i);
-	   fh2_ITS_acceptance->Fill(etaits,tPrimaryVtxPosition[2]);
-	   Double_t itsqa[4]={etaits,phiits,lCentrality,tPrimaryVtxPosition[2]};
-	   fhistits->Fill(itsqa);
-	   selectedTracksLeading->Add(new AliAssociatedTrackYS(-999, etaits, phiits, -999, 0, -999,-999, 0, 1));
-	   
-	 }
-	 
-   }
-
-   
 
    fvzero = fEvent->GetVZEROData();
    if(fAnaMode=="TPCV0A"||fAnaMode=="TPCV0C"||fAnaMode=="V0AV0C"){
@@ -1703,15 +1682,15 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
      if (fQA)   fHistVZERO->Fill(vzeroqa, 0, (Double_t)mult_vzero_eq);
      if(imod>31) selectedTrackV0A->Add(new AliAssociatedVZEROYS(mult_vzero_eq,eta_ave,phi_vzero,0.0,0,0));
      if(imod<32) selectedTrackV0C->Add(new AliAssociatedVZEROYS(mult_vzero_eq,eta_ave,phi_vzero,0.0,0,0));
-   }
-   if(fAnaMode=="TPCV0A"){
-     FillCorrelationTracks(lCentrality,selectedTracksLeading ,selectedTrackV0A,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
-     FillCorrelationTracksMixing(lCentrality,lPrimaryBestVtx->GetZ(),poolmax,poolmin,selectedTracksLeading,selectedTrackV0A,fHistTriggerTrackMix,fHistReconstTrackMix,kFALSE,0.02,0.8,bSign,0);
-   }else if(fAnaMode=="TPCV0C"){
-     FillCorrelationTracks(lCentrality,selectedTracksLeading ,selectedTrackV0C,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
-     FillCorrelationTracksMixing(lCentrality,lPrimaryBestVtx->GetZ(),poolmax,poolmin,selectedTracksLeading ,selectedTrackV0C,fHistTriggerTrackMix,fHistReconstTrackMix,kFALSE,0.02,0.8,bSign,0);
-   }  else if(fAnaMode=="V0AV0C"){
-     FillCorrelationTracks(lCentrality,selectedTrackV0A,selectedTrackV0C,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
+	 }
+	 if(fAnaMode=="TPCV0A"){
+	   FillCorrelationTracks(lCentrality,selectedTracksLeading ,selectedTrackV0A,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
+	   FillCorrelationTracksMixing(lCentrality,lPrimaryBestVtx->GetZ(),poolmax,poolmin,selectedTracksLeading,selectedTrackV0A,fHistTriggerTrackMix,fHistReconstTrackMix,kFALSE,0.02,0.8,bSign,0);
+	 }else if(fAnaMode=="TPCV0C"){
+	   FillCorrelationTracks(lCentrality,selectedTracksLeading ,selectedTrackV0C,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
+	   FillCorrelationTracksMixing(lCentrality,lPrimaryBestVtx->GetZ(),poolmax,poolmin,selectedTracksLeading ,selectedTrackV0C,fHistTriggerTrackMix,fHistReconstTrackMix,kFALSE,0.02,0.8,bSign,0);
+	 }  else if(fAnaMode=="V0AV0C"){
+	   FillCorrelationTracks(lCentrality,selectedTrackV0A,selectedTrackV0C,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);
      FillCorrelationTracksMixing(lCentrality,lPrimaryBestVtx->GetZ(),poolmax,poolmin,selectedTrackV0A,selectedTrackV0C,fHistTriggerTrackMix,fHistReconstTrackMix,kFALSE,0.02,0.8,bSign,0);
    }
    selectedTrackV0A->Clear();
@@ -1723,9 +1702,6 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    Float_t nFMD_fwd_hits=0;
    Float_t nFMD_bwd_hits=0;
    AliAODForwardMult*aodForward=static_cast<AliAODForwardMult*>(fEvent->FindListObject("Forward"));
-   //cout<<aodForward->IsSecondaryCorrected()<<endl;
-   //cout<<aodForward->IsAcceptanceCorrected()<<endl;
-   //  cout<<aodForward->IsVertexBiasCorrected() <<endl;
 
    /*
    AliForwardCorrectionManager& fcm = AliForwardCorrectionManager::Instance();                                        
@@ -1829,7 +1805,7 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
         binscont[2]=lCentrality;
         binscont[3]=RangePhi_FMD(dphi);
         binscont[4]=fPrimaryZVtx;
-        fhSecFMD->Fill(binscont,0,mult);
+        fhScFMD->Fill(binscont,0,mult);
       }
     }
    
@@ -1860,6 +1836,52 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
     return;
   }
   */
+
+   // Leading Particle
+  if(fAnaMode=="TPCFMD" || fAnaMode=="TPCTPC" || fAnaMode=="TPCFMDC"){
+	selectedTracksLeading = GetAcceptedTracksLeading(fEvent,kTRUE);
+	selectedTracksAssociated = GetAcceptedTracksLeading(fEvent,kFALSE);
+	if (fasso == "Phi")    selectedTracksAssociated = GetAcceptedTracksAssociated(fEvent);
+   if (fasso == "V0")    selectedTracksAssociated = GetAcceptedV0Tracks(fEvent);
+   if (fasso == "PID")    selectedTracksAssociated = GetAcceptedTracksPID(fEvent);
+   if (fasso == "Cascade")    selectedTracksAssociated = GetAcceptedCascadeTracks(fEvent);
+  }else if(fAnaMode=="ITSFMD" || fAnaMode=="ITSFMDC"){
+	 AliAODTracklets *tracklets = ((AliAODEvent*)fEvent)->GetTracklets();
+	 if (!tracklets) return;
+	 Int_t nTracklets = tracklets->GetNumberOfTracklets();
+	 Int_t nITScluster= tracklets->GetNumberOfITSClusters(0)+tracklets->GetNumberOfITSClusters(1);
+
+	 fh2_SPD_multcorr->Fill(nTracklets,nITScluster);
+	 fh2_SPDV0_multcorr->Fill(nTracklets,fvzero->GetMTotV0A());
+
+	 for (Int_t i = 0; i < nTracklets; i++) {
+	   Double_t dphi  = tracklets->GetDeltaPhi(i);
+	   
+	   fhtrackletsdphi->Fill(1000*dphi);
+	   
+	   if (TMath::Abs(dphi) * 1000 > 5.) {
+		 continue;
+	   }
+	   
+	   Double_t theta = tracklets->GetTheta(i);
+	   Double_t etaits   = -TMath::Log(TMath::Tan(theta/2));
+	   
+	   Double_t etalow=log(7.6)-log(sqrt((-14.1-fPrimaryZVtx)*(-14.1-fPrimaryZVtx)+7.6*7.6)-(-14.1-fPrimaryZVtx));
+	   Double_t etahigh=log(7.6)-log(sqrt((14.1-fPrimaryZVtx)*(14.1-fPrimaryZVtx)+7.6*7.6)-(14.1-fPrimaryZVtx));
+
+	   if(etaits<etalow || etaits>etahigh) continue;
+	   
+	   if (etaits < -1.7 || etaits > 1.7) {
+		 continue;
+	   }
+	   
+	   Double_t phiits   = tracklets->GetPhi(i);
+	   fh2_ITS_acceptance->Fill(tPrimaryVtxPosition[2],etaits);
+	   Double_t itsqa[4]={etaits,phiits,lCentrality,tPrimaryVtxPosition[2]};
+	   fhistits->Fill(itsqa);
+	   selectedTracksLeading->Add(new AliAssociatedTrackYS(-999, etaits, phiits, -999, 0, -999,-999, 0, 1));
+	 }
+  }
       
   if(fAnaMode=="TPCTPC"){
     FillCorrelationTracks(lCentrality,selectedTracksLeading,selectedTracksAssociated,fHistTriggerTrack,fHistReconstTrack,kFALSE,0.02,0.8,bSign,0);

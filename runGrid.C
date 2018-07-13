@@ -1,5 +1,5 @@
 {
-  char *gridMode="full";
+  char *gridMode="";
   Bool_t iAODAnalysis =kTRUE;
   Bool_t useMC =kFALSE;
   Bool_t frun2=kTRUE;
