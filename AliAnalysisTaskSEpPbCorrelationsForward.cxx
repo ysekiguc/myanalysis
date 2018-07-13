@@ -1352,7 +1352,7 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
 		 nbinitsfmddeltaeta=49;
 		 nbinetafmd=17;
 	   }
-       const Int_t iTrackBin_tpcfmd[7]={nbinitsfmddeltaeta,1,nbinetafmd,7,72,1,18};
+       const Int_t iTrackBin_tpcfmd[7]={nbinitsfmddeltaeta,1,nbinetafmd,7,72,5,18};
 	   Double_t binning_zvx_fmdits[2]={-10,10};
 	   Double_t binning_itseta[19]={-1.7, -1.6, -1.4, -1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.,0.2,  0.4,  0.6,  0.8,  1.0,  1.2,  1.4,  1.6,  1.7};
 
@@ -1368,7 +1368,8 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
 
      fHistReconstTrack->SetBinLimits(3,binning_cent_its);
      fHistReconstTrack->SetBinLimits(4,binning_dphi);
-     fHistReconstTrack->SetBinLimits(5,binning_zvx_fmdits);
+	 //     fHistReconstTrack->SetBinLimits(5,binning_zvx_fmdits);
+     fHistReconstTrack->SetBinLimits(5,-10,10);
      fHistReconstTrack->SetBinLimits(6,binning_itseta);
      fHistReconstTrack->SetVarTitle(0,"#Delta#eta");
      fHistReconstTrack->SetVarTitle(1,"p_{T} GeV/c");
@@ -1389,7 +1390,8 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
      fHistReconstTrackMix->SetBinLimits(1,binning_pt_fmdits);
      fHistReconstTrackMix->SetBinLimits(3,binning_cent_its);
      fHistReconstTrackMix->SetBinLimits(4,binning_dphi);
-     fHistReconstTrackMix->SetBinLimits(5,binning_zvx_fmdits);
+	 //     fHistReconstTrackMix->SetBinLimits(5,binning_zvx_fmdits);
+     fHistReconstTrackMix->SetBinLimits(5,-10,10);
      fHistReconstTrackMix->SetBinLimits(6,binning_itseta);
      fHistReconstTrackMix->SetVarTitle(0,"#Delta#eta");
      fHistReconstTrackMix->SetVarTitle(1,"p_{T} GeV/c");
