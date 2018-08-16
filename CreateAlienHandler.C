@@ -2,13 +2,13 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   {
     //  char *data     = "LHC17f2b_fast";
     char *data     = "LHC16q";
-  char *datatype = "woSDD"  ;//Fast,wSDD,woSDD
-  Int_t method   =  1;
-  // Check if user has a valid token, otherwise make one. This has limitations.
-  // One can always follow the standard procedure of calling alien-token-init then
-  // source /tmp/gclient_env_$UID in the current shell.
-
-  // if (!AliAnalysisGrid::CreateToken()) return NULL;
+	char *datatype = "woSDD"  ;//Fast,wSDD,woSDD
+	Int_t method   =  1;
+	// Check if user has a valid token, otherwise make one. This has limitations.
+	// One can always follow the standard procedure of calling alien-token-init then
+	// source /tmp/gclient_env_$UID in the current shell.
+	
+	// if (!AliAnalysisGrid::CreateToken()) return NULL;
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
   plugin->SetOverwriteMode();
   plugin->SetMergeViaJDL(1);
@@ -20,7 +20,9 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
  plugin->SetAPIVersion("V1.1x");
   //  plugin->SetAliPhysicsVersion("vAN-20170628-1");
   //plugin->SetAliPhysicsVersion("vAN-20170722-1");//have issuse to deal with primary particle so it is removed.
-  plugin->SetAliPhysicsVersion("vAN-20180407-1");
+
+ //  plugin->SetAliPhysicsVersion("vAN-20180407-1");
+ plugin->SetAliPhysicsVersion("vAN-20180718-1");
 
   // Declare input data to be processed.
   // Method 1: Create automatically XML collections using alien 'find' command.
@@ -42,7 +44,7 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
       // plugin->AddRunNumber(265308);  // remove because no ZDC
       plugin->AddRunNumber(265309);
 
-
+	  /*
       plugin->AddRunNumber(265332);
       plugin->AddRunNumber(265334);
       //      plugin->AddRunNumber(265335); // remove because of no TOF in data taking
@@ -74,7 +76,7 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
       plugin->AddRunNumber(265501);
       plugin->AddRunNumber(265521);
       plugin->AddRunNumber(265525);
-
+	  */
     }else if(data=="LHC15n"){
       plugin->SetGridDataDir("/alice/data/2015/LHC15n");
       plugin->SetDataPattern("*pass4/AOD/*/AliAOD.root");
@@ -235,7 +237,9 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   //      plugin->SetGridWorkingDir("07052018_FC_woSDD");
   //  plugin->SetGridWorkingDir("09052018_BC_FAST");
   //    plugin->SetGridWorkingDir("09052018_BC_woSDD");
-  plugin->SetGridWorkingDir("31052018_BC_woSDD");
+  //  plugin->SetGridWorkingDir("31052018_BC_woSDD");
+  //  plugin->SetGridWorkingDir("19072018");
+  plugin->SetGridWorkingDir("24072018_ITSFMD");
   
   // Declare alien output directory. Relative to working directory.
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
