@@ -1246,7 +1246,7 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
      fHistReconstTrackMix->SetBinLimits(3,binning_cent_fmdfmd);
      //    fHistReconstTrackMix->SetBinLimits(4,-0.551*TMath::Pi(),1.449*TMath::Pi());   
      fHistReconstTrackMix->SetBinLimits(4,-0.55*TMath::Pi(),1.45*TMath::Pi());
-     fHistReconstTrackMix->SetBinLimits(5,-10,10.)
+     fHistReconstTrackMix->SetBinLimits(5,-10,10.);
      fHistReconstTrackMix->SetVarTitle(0,"#Delta#eta");
      fHistReconstTrackMix->SetVarTitle(1,"FMD(Asso) Eta");
      fHistReconstTrackMix->SetVarTitle(2,"FMD(Trigger) Eta");
