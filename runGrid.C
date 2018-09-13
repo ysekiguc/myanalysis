@@ -3,6 +3,7 @@
   Bool_t iAODAnalysis =kTRUE;
   Bool_t useMC =kFALSE;
   Bool_t frun2=kTRUE;
+  Bool_t root6=kTRUE;
   //Load common libraries
   gSystem->Load("libCore.so");
   gSystem->Load("libTree.so");
@@ -74,7 +75,7 @@
 
   //  gSystem->Load("libESD.so");
   //gSystem->Load("libMinuit");
-
+  
   // Use AliRoot includes to compile our task
   gROOT->ProcessLine(".include $ROOTSYS/include");
   gROOT->ProcessLine(".include $ALICE_ROOT/include");
@@ -85,18 +86,20 @@
   gSystem->SetIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT -I$ALICE_ROOT/include -I$ALICE_PHYSICS/include  -I$ALICE_ROOT/ITS -I$ALICE_ROOT/TPC -I$ALICE_ROOT/CONTAINERS -I$ALICE_ROOT/STEER/STEER -I$ALICE_ROOT/STEER/STEERBase -I$ALICE_ROOT/STEER/ESD -I$ALICE_ROOT/STEER/AOD -I$ALICE_ROOT/TRD -I$ALICE_ROOT/macros -I$ALICE_ROOT/ANALYSIS  -I$ALICE_ROOT/OADB -I$ALICE_PHYSICS/OADB -I$ALICE_PHYSICS/PWG -I$ALICE_PHYSICS/PWGCF -I$ALICE_ROOT/PWGHF -I$ALICE_ROOT/PWGHF/base -I$ALICE_ROOT/PWGHF/vertexingHF -I$ALICE_ROOT/PWG/FLOW/Base -I$ALICE_ROOT/PWG/FLOW/Tasks -I$ALICE_ROOT/PWGDQ/dielectron -I$ALICE_ROOT/AD/macros -I/$ALICE_ROOT/STAT/Macros -I$ALICE_ROOT/VZERO -I$ALICE_PHYSICS/OADB -g");
 
   AliAnalysisManager *mgr = new AliAnalysisManager("testAnalysis");
+  TChain*chain;
   // Create and configure the alien handler plugin
   if(gridMode!=""){
-    gROOT->LoadMacro("CreateAlienHandler.C");
+    if(root6) gROOT->ProcessLine("CreateAlienHandler.C");
+    else gROOT->LoadMacro("CreateAlienHandler.C");
     AliAnalysisGrid *alienHandler = CreateAlienHandler(useMC,iAODAnalysis);
     mgr->SetGridHandler(alienHandler);
     //  if (!alienHandler) return;
   }else{
     if(useMC){
       if(iAODAnalysis){
-        TChain* chain=new TChain("aodTree");
+	chain=new TChain("aodTree");
         chain->Add("/Users/yuko/alicework/alice_data/2017/LHC17f2b_fast/265309/001/AliAOD.root");//DPMJET
-        TChain *chain1 = new TChain("TE");
+        chain1 = new TChain("TE");
         chain1->Add("/Users/yuko/alicework/alice_data/2017/LHC17f2b_fast/265309/001/files/galice.root");//DPMJET
       }else{
         TChain* chain=new TChain("esdTree");
@@ -105,7 +108,7 @@
 
     }else{
       if(!iAODAnalysis){
-        TChain *chain =new TChain("esdTree");
+        chain =new TChain("esdTree");
         //	chain->Add("../testdata/AliESDs_12g_pass2_188359.root");
 	//    chain->Add("input/2012/LHC12g/000188359/ESDs/pass2/12000188359001.10/AliESDs.root");
 	//	chain->Add("../../tmp/AliESDs.root");
@@ -113,16 +116,17 @@
 
 
         chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_CENT_wSDD/16000265309019.100/AliESDs.root");
-}
-else{
-  TChain *chain =new TChain("aodTree");
+      }
+      else{
+	chain =new TChain("aodTree");
 	//chain->Add("../../alice_data/2013/LHC13c/000195529/ESDs/pass2/AOD/001/AliAOD.root");/Users/yuko/alicework/alice_data/2017/LHC17f2b_fast/265309/001/AliAOD.root does
 	//chain->Add("../../alice_data/2013/LHC13b/000195344/ESDs/pass3/AOD/001/AliAOD.root");
 	//		chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_CENT_wSDD/AOD/001/AliAOD.root");
 	//	chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_CENT_wSDD/16000265309019.100/AliAOD.root");
 	//
 	//chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/001/AliAOD.root");
-	chain->Add("$HOME/work/local_alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
+	if(root6)chain->Add("~/workalice/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
+	else chain->Add("$HOME/work/local_alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
 	//	chain->Add("$HOME/alicework/alice_data/2015/LHC15n/000244340/pass4/AOD/001/AliAOD.root");
 
       }
@@ -161,13 +165,15 @@ else{
    
 
    if(frun2){
-   gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
-   AddTaskPhysicsSelection(useMC,kTRUE);
-   gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
+     if(root6) gROOT->ProcessLine("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
+     else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
+     AddTaskPhysicsSelection(useMC,true);
+     if(root6) gROOT->ProcessLine("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
+     else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
    AddTaskMultSelection();
    }
-
-   gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
+   if(root6) gROOT->ProcessLine("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
+   else gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    //   AliAnalysisTaskPIDResponse *taskPID=AddTaskPIDResponse(kFALSE,kFALSE,kTRUE,1);
    AddTaskPIDResponse(useMC);
 
@@ -186,12 +192,16 @@ else{
  //
  //  AliAnalysisTaskSE *setupTask = AddTaskPIDResponse(isMC,autoMCesd,tuneOnData,recoPass,cachePID,"",useTPCEtaCorrection,useTPCMultiplicityCorrection,recoDataPass);
  //
-   gROOT->LoadMacro("AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
-   gROOT->LoadMacro("AddTaskpPbCorrelationsForward.C");
-
+   if(root6){
+     gROOT->ProcessLine(".x AliAnalysisTaskSEpPbCorrelationsForward.cx");
+     gROOT->ProcessLine("AddTaskpPbCorrelationsForward.C");
+   }else{
+     gROOT->LoadMacro("AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
+     gROOT->LoadMacro("AddTaskpPbCorrelationsForward.C");
+   }
    AliAnalysisTaskSEpPbCorrelationsForward* ana =AddTaskpPbCorrelationsForward();
    // Enable debug printouts
-
+   
    mgr->SetDebugLevel(0);
 
    if (!mgr->InitAnalysis()) return;
