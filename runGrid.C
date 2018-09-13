@@ -89,7 +89,7 @@
   TChain*chain;
   // Create and configure the alien handler plugin
   if(gridMode!=""){
-    if(root6) gROOT->ProcessLine("CreateAlienHandler.C");
+    if(root6) gROOT->ProcessLine(".L CreateAlienHandler.C");
     else gROOT->LoadMacro("CreateAlienHandler.C");
     AliAnalysisGrid *alienHandler = CreateAlienHandler(useMC,iAODAnalysis);
     mgr->SetGridHandler(alienHandler);
@@ -165,14 +165,14 @@
    
 
    if(frun2){
-     if(root6) gROOT->ProcessLine("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
+     if(root6) gROOT->ProcessLine(".L $ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
      else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
      AddTaskPhysicsSelection(useMC,true);
-     if(root6) gROOT->ProcessLine("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
+     if(root6) gROOT->ProcessLine(".L $ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
      else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
    AddTaskMultSelection();
    }
-   if(root6) gROOT->ProcessLine("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
+   if(root6) gROOT->ProcessLine(".L $ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    else gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    //   AliAnalysisTaskPIDResponse *taskPID=AddTaskPIDResponse(kFALSE,kFALSE,kTRUE,1);
    AddTaskPIDResponse(useMC);
@@ -193,7 +193,7 @@
  //  AliAnalysisTaskSE *setupTask = AddTaskPIDResponse(isMC,autoMCesd,tuneOnData,recoPass,cachePID,"",useTPCEtaCorrection,useTPCMultiplicityCorrection,recoDataPass);
  //
    if(root6){
-     gROOT->ProcessLine(".x AliAnalysisTaskSEpPbCorrelationsForward.cx");
+     gROOT->ProcessLine(".x AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
      gROOT->ProcessLine("AddTaskpPbCorrelationsForward.C");
    }else{
      gROOT->LoadMacro("AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
