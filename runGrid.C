@@ -1,5 +1,5 @@
 {
-  char *gridMode="";
+  TString gridMode="full";
   Bool_t iAODAnalysis =kTRUE;
   Bool_t useMC =kFALSE;
   Bool_t frun2=kTRUE;
@@ -73,7 +73,7 @@
 
   gSystem->Load("libACORDEbase.so");
 
-  //  gSystem->Load("libESD.so");
+  //gSystem->Load("libESD.so");
   //gSystem->Load("libMinuit");
   
   // Use AliRoot includes to compile our task
@@ -125,10 +125,11 @@
 	//	chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_CENT_wSDD/16000265309019.100/AliAOD.root");
 	//
 	//chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/001/AliAOD.root");
-	if(root6)chain->Add("~/workalice/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
-	else chain->Add("$HOME/work/local_alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
-	//	chain->Add("$HOME/alicework/alice_data/2015/LHC15n/000244340/pass4/AOD/001/AliAOD.root");
 
+
+	//	chain->Add("~/workalice/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
+	//	chain->Add("$HOME/alicework/alice_data/2015/LHC15n/000244340/pass4/AOD/001/AliAOD.root");
+   	chain->Add("~/Downloads/AliAOD.root");
       }
     }
 
@@ -156,12 +157,7 @@
    }
    
 //   if(!TGrid
-
-
-
-
-
-	  //::Connect("alien://","ysekiguc","","-domain=cern.ch")){cout<<"TGrid connection failed"<<endl;return ;}
+   //::Connect("alien://","ysekiguc","","-domain=cern.ch")){cout<<"TGrid connection failed"<<endl;return ;}
    
 
    if(frun2){
@@ -170,36 +166,20 @@
      AddTaskPhysicsSelection(useMC,true);
      if(root6) gROOT->ProcessLine(".L $ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
      else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
-   AddTaskMultSelection();
+	 AddTaskMultSelection();
+	 //AliMultSelectionTask *multSelTask=AddTaskMultSelection();
+	 //	 multSelTask->SetAlternateOADBFullManualBypassMC("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/data/OADB-LHC16q.root");
    }
    if(root6) gROOT->ProcessLine(".L $ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    else gROOT->LoadMacro("$ALICE_ROOT/ANALYSIS/macros/AddTaskPIDResponse.C");
    //   AliAnalysisTaskPIDResponse *taskPID=AddTaskPIDResponse(kFALSE,kFALSE,kTRUE,1);
    AddTaskPIDResponse(useMC);
-
-
-   //
- //  //   gROOT->LoadMacro("AddTaskPIDResponse.C");
- //  Bool_t isMC = kFALSE;
- //  Bool_t autoMCesd = kTRUE;
- //  Bool_t tuneOnData = kFALSE;
- //  Int_t recoPass = 2;
- //  Bool_t cachePID = kFALSE;
- //  Bool_t useTPCEtaCorrection = kTRUE;
- //  Bool_t useTPCMultiplicityCorrection = kFALSE;
- //   Int_t recoDataPass = 2;
- //  //  Int_t recoDataPass = 2;
- //
- //  AliAnalysisTaskSE *setupTask = AddTaskPIDResponse(isMC,autoMCesd,tuneOnData,recoPass,cachePID,"",useTPCEtaCorrection,useTPCMultiplicityCorrection,recoDataPass);
- //
-   if(root6){
-     gROOT->ProcessLine(".x AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
-     gROOT->ProcessLine("AddTaskpPbCorrelationsForward.C");
-   }else{
-     gROOT->LoadMacro("AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
-     gROOT->LoadMacro("AddTaskpPbCorrelationsForward.C");
-   }
-   AliAnalysisTaskSEpPbCorrelationsForward* ana =AddTaskpPbCorrelationsForward();
+   
+   gROOT->ProcessLine(".x AliAnalysisTaskSEpPbCorrelationsForward.cxx++g");
+   gROOT->ProcessLine(".x AddTaskpPbCorrelationsForward.C");
+   
+   //   AliAnalysisTaskSEpPbCorrelationsForward* ana =AddTaskpPbCorrelationsForward();
+   
    // Enable debug printouts
    
    mgr->SetDebugLevel(0);
