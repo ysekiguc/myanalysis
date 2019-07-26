@@ -84,6 +84,7 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       frun2(kTRUE),
       fQA(kTRUE),
       fFMDcut(kTRUE),
+      fFMDcutmode(1),
       fOnfly(kFALSE),
       fAnaMode("V0AV0C"),
       fasso("Phi"),
@@ -276,6 +277,7 @@ AliAnalysisTaskSEpPbCorrelationsForward::AliAnalysisTaskSEpPbCorrelationsForward
       frun2(kTRUE),
       fQA(kTRUE),
       fFMDcut(kTRUE),
+      fFMDcutmode(1),
       fOnfly(kFALSE),
       fAnaMode("V0AV0C"),
       fasso("Phi"),
@@ -956,7 +958,7 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    Double_t binning_cent[12] = {0., 5.,  10., 20.,
                                 30., 40., 50., 60., 70., 80., 90., 100.1};
    //Double_t binning_cent_HMPP[12] = {0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.,1.1};                
-   Double_t binning_cent_HMPP[12] = {0., 0.01,0.05,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0,7, 0,8,1.};
+   Double_t binning_cent_HMPP[12] = {0., 0.01,0.05,0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,1.};
 
    Double_t binning_deta[49] = {
        -2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, -1.5,
@@ -1886,7 +1888,27 @@ void AliAnalysisTaskSEpPbCorrelationsForward::UserCreateOutputObjects() {
    //   if(fAnaMode!="TPCTPC"){
      if(fFMDcut){
 	   //       if (nV0A_hits + nV0C_hits < 1.5*(nFMD_fwd_hits + nFMD_bwd_hits) - 20) {
-	   if((nV0A_hits<(1.3*nFMD_fwd_hits-200)) || (nV0C_hits<(2.*nFMD_bwd_hits-200)) ){
+       Double_t FMDcutapar0=0.;
+       Double_t FMDcutapar1=0.;
+       Double_t FMDcutcpar0=0.;
+       Double_t FMDcutcpar1=0.;
+
+       switch(fFMDcutmode){
+       case 1:
+	 FMDcutapar0=1.3;
+	 FMDcutapar1=200;
+	 FMDcutcpar0=2.;
+	 FMDcutcpar1=200;
+       	 break;
+       case 2:
+	 FMDcutapar0=1.3;
+	 FMDcutapar1=600;
+	 FMDcutcpar0=2.;
+	 FMDcutcpar1=600;
+       default: break;
+       }
+       //       if((nV0A_hits<(1.3*nFMD_fwd_hits-200)) || (nV0C_hits<(2.*nFMD_bwd_hits-200)) ){
+       if((nV0A_hits<(FMDcutapar0*nFMD_fwd_hits-FMDcutapar1)) || (nV0C_hits<(FMDcutcpar0*nFMD_bwd_hits-FMDcutcpar1)) ){
 		 selectedTracksLeading->Clear();
 		 delete selectedTracksLeading;
 		 selectedTracksAssociated->Clear();

@@ -2,14 +2,15 @@ AliAnalysisTaskSEpPbCorrelationsForward* AddTaskpPbCorrelationsForward(
 								       TString  fListName      = "pPbCorrelations_1",
 								       TString  fListName1     ="Corr_1",
 								       TString  fListName2     ="QA_1",
-								       TString  fCollisiontype = "HMPP",
+								       TString  fCollisiontype = "pPb",
 								       Bool_t  fDataType       =kTRUE,//TRUE=real data, FALSE=MC
 								       Bool_t frun2            =kTRUE,
 								       Bool_t fFMDcut          =kTRUE,
 								       TString anamode         ="TPCFMD",//TPCTPC, TPCV0A, TPCV0C, V0AV0C,TPCFMD, TPCFMDC, FMDFMD, SECA
-								       TString anacent         ="V0M",
+								       TString anacent         ="V0A",
 								       TString assomode        ="hadron",
-								       Int_t ffilterbit        =5
+								       Int_t ffilterbit        =5,
+								       Int_t fFMDcutpar        =1
 								       )
 {
   // Get the current analysis manager.
@@ -56,6 +57,7 @@ AliAnalysisTaskSEpPbCorrelationsForward* AddTaskpPbCorrelationsForward(
   myTask->SetDatatype(fDataType);
   myTask->SetRunType(frun2);
   myTask->SetFMDcut(fFMDcut);
+  myTask->SetFMDcutpar(fFMDcutpar);
   //  if(anamode=="FMDFMD" || anamode=="SECA")myTask-> SetMinNTracksInPool(5000);
   myTask->SetMinNTracksInPool(5000);
   myTask->SetAnalysisCent(anacent);//0:V0A 1:ZNA 2:
