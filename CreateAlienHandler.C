@@ -1,8 +1,13 @@
 AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 {
   //  char *data     = "LHC17f2b_fast";
-  TString data     = "LHC17o";
-  TString datatype = "woSDD"  ;//Fast,wSDD,woSDD
+  //  TString data     = "LHC17o";
+  //  TString data     = "LHC16q";
+  //  TString data     = "LHC15o_HIR";
+  TString data     = "LHC15o_LIR";
+  //  TString data     = "LHC18f";
+  
+  TString datatype = "FAST"  ;//Fast,wSDD,woSDD
   Int_t method   =  1;
   // Check if user has a valid token, otherwise make one. This has limitations.
   // One can always follow the standard procedure of calling alien-token-init then
@@ -12,18 +17,24 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
   plugin->SetOverwriteMode();
   plugin->SetMergeViaJDL(1);
-  plugin->SetRunMode("full");
-  //    plugin->SetRunMode("terminate");
-  // plugin->SetRunMode("test");
+
+
+  //   plugin->SetRunMode("full");
+   plugin->SetRunMode("terminate");
+   //plugin->SetRunMode("test");
   
   //Set versions of used packages
   plugin->SetAPIVersion("V1.1x");
   //  plugin->SetAliPhysicsVersion("vAN-20170628-1");
-  //plugin->SetAliPhysicsVersion("vAN-20170722-1");//have issuse to deal with primary particle so it is removed.
-  
+  //plugin->SetAliPhysicsVersion("vAN-20170722-1");//have issuse to deal with primary particle so it is removed
   //  plugin->SetAliPhysicsVersion("vAN-20180407-1");
-  plugin->SetAliPhysicsVersion("vAN-20190709-1");
-  
+  //  plugin->SetAliPhysicsVersion("vAN-20190709-1");
+  //  plugin->SetRootVersion("v5-34-30");
+  //  plugin->SetAliRootVersion("v5-09-49");
+  //plugin->SetAliPhysicsVersion("vAN-20190731_ROOT6-1");
+  //  plugin->SetAliPhysicsVersion("vAN-20190909_ROOT6-1");
+  plugin->SetAliPhysicsVersion("vAN-20190919_ROOT6-1");
+    
   // Declare input data to be processed.
   // Method 1: Create automatically XML collections using alien 'find' command.
   // Define production directory LFN
@@ -36,48 +47,88 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   plugin->SetCheckCopy(kFALSE);
   if(!isMC){
     if(method==1){
-      if(data=="LHC16q"){
+      if(data=="LHC15o_HIR"){//PbPb run2
+		plugin->SetGridDataDir("/alice/data/2015/LHC15o");
+		plugin->SetDataPattern("*pass1/AOD194/*/AliAOD.root");
+		//Good runs according to Freja's note
+		plugin->AddRunNumber(246276);
+		plugin->AddRunNumber(246275);
+		plugin->AddRunNumber(246185);
+		plugin->AddRunNumber(246153);
+		plugin->AddRunNumber(246089);
+		plugin->AddRunNumber(245963);
+		plugin->AddRunNumber(245954);
+		plugin->AddRunNumber(245833);
+		plugin->AddRunNumber(245705);
+		plugin->AddRunNumber(245683);
+
+      }else if(data=="LHC15o_LIR"){//PbPb run2
+		plugin->SetGridDataDir("/alice/data/2015/LHC15o");
+		plugin->SetDataPattern("*pass5_lowIR/AOD194/*/AliAOD.root");
+		//Good runs according to Freja's note
+		plugin->AddRunNumber(244917);
+		plugin->AddRunNumber(244918);
+		plugin->AddRunNumber(244975);
+		plugin->AddRunNumber(244980);
+		plugin->AddRunNumber(244982);
+		plugin->AddRunNumber(244983);
+		plugin->AddRunNumber(245064);
+		plugin->AddRunNumber(245066);
+		plugin->AddRunNumber(245068);
+		plugin->AddRunNumber(246390);
+		plugin->AddRunNumber(246391);
+		plugin->AddRunNumber(246392);
+		
+      }else if(data=="LHC16q"){
 		plugin->SetGridDataDir("/alice/data/2016/LHC16q");
 		if(datatype=="wSDD")plugin->SetDataPattern("*pass1_CENT_wSDD/AOD/*/AliAOD.root");
-		else if(datatype=="woSDD")plugin->SetDataPattern("*pass1_CENT_woSDD/AOD/*/AliAOD.root");
-		else if(datatype=="FAST")plugin->SetDataPattern("*pass1_FAST/AOD/*/AliAOD.root");
+		else if(datatype=="woSDD")plugin->SetDataPattern("*pass1_CENT_woSDD/AOD190/*/AliAOD.root");
+		else if(datatype=="FAST")plugin->SetDataPattern("*pass1_FAST/AOD190/*/AliAOD.root");
 		//plugin->AddDataFile("/alice/cern.ch/user/y/ysekiguc/01122017_MC/265305); // remove because no ZDC
-		// plugin->AddRunNumber(265308);  // remove because no ZDC
-		//      plugin->AddRunNumber(265309);
+		//		plugin->AddRunNumber(265308);  // remove because no ZDC
+
+		//		part1
 		
-		
-		plugin->AddRunNumber(265332);
+		plugin->AddRunNumber(265309);
 		/*
-		  plugin->AddRunNumber(265334);
-		  //      plugin->AddRunNumber(265335); // remove because of no TOF in data taking
-		  plugin->AddRunNumber(265336);
-		  plugin->AddRunNumber(265338);
-		  plugin->AddRunNumber(265339);
-		  plugin->AddRunNumber(265342);
-		  plugin->AddRunNumber(265343);
-		  plugin->AddRunNumber(265344);
-		  plugin->AddRunNumber(265377);
-		  plugin->AddRunNumber(265378);
-		  plugin->AddRunNumber(265381);
-		  plugin->AddRunNumber(265383);
-		  plugin->AddRunNumber(265384);
-		  plugin->AddRunNumber(265385);
-		  plugin->AddRunNumber(265387);
-		  plugin->AddRunNumber(265388);
-		  plugin->AddRunNumber(265419);
-		  plugin->AddRunNumber(265420);
-		  plugin->AddRunNumber(265421);
-		  plugin->AddRunNumber(265422);
-		  plugin->AddRunNumber(265424);
-		  plugin->AddRunNumber(265425);
-		  plugin->AddRunNumber(265426);
-		  plugin->AddRunNumber(265427);
-		  plugin->AddRunNumber(265435);
-		  plugin->AddRunNumber(265499);
-		  plugin->AddRunNumber(265500);
-		  plugin->AddRunNumber(265501);
-		  plugin->AddRunNumber(265521);
-		  plugin->AddRunNumber(265525);
+		plugin->AddRunNumber(265332);
+		plugin->AddRunNumber(265334);
+		plugin->AddRunNumber(265335); // remove because of no TOF in data taking
+		plugin->AddRunNumber(265336);
+		*/
+
+		/*
+		//part2
+		plugin->AddRunNumber(265338);
+		plugin->AddRunNumber(265339);
+		plugin->AddRunNumber(265342);
+		plugin->AddRunNumber(265343);
+		plugin->AddRunNumber(265344);
+		plugin->AddRunNumber(265377);
+		plugin->AddRunNumber(265378);
+		plugin->AddRunNumber(265381);
+		plugin->AddRunNumber(265383);
+		plugin->AddRunNumber(265384);
+		plugin->AddRunNumber(265385);
+		*/
+		/*
+		//part3
+		plugin->AddRunNumber(265387);
+		plugin->AddRunNumber(265388);
+		plugin->AddRunNumber(265419);
+		plugin->AddRunNumber(265420);
+		plugin->AddRunNumber(265421);
+		plugin->AddRunNumber(265422);
+		plugin->AddRunNumber(265424);
+		plugin->AddRunNumber(265425);
+		plugin->AddRunNumber(265426);
+		plugin->AddRunNumber(265427);
+		plugin->AddRunNumber(265435);
+		plugin->AddRunNumber(265499);
+		plugin->AddRunNumber(265500);
+		plugin->AddRunNumber(265501);
+		plugin->AddRunNumber(265521);
+		plugin->AddRunNumber(265525);
 		*/
 	  }else if(data=="LHC15n"){
 		plugin->SetGridDataDir("/alice/data/2015/LHC15n");
@@ -138,9 +189,22 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 		plugin->AddRunNumber(195673);
 		plugin->AddRunNumber(195675);
 		plugin->AddRunNumber(195677);
-	  }else if(data=="LHC17o"){
-		plugin->SetGridDataDir("/alice/data/2017/LHC17o");
+	  }else if(data=="LHC18f"){
+		plugin->SetGridDataDir("/alice/data/2018/LHC18f");
 		plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
+		plugin->AddRunNumber(287000);
+		plugin->AddRunNumber(287021);
+		plugin->AddRunNumber(287063);
+		plugin->AddRunNumber(287064);
+		plugin->AddRunNumber(287072);
+		plugin->AddRunNumber(287077);
+		plugin->AddRunNumber(287137);
+		plugin->AddRunNumber(287185);
+      }else if(data=="LHC17o"){
+	plugin->SetGridDataDir("/alice/data/2017/LHC17o");
+	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
+
+		/*
 		plugin->AddRunNumber(281961);
 		plugin->AddRunNumber(281959);
 		plugin->AddRunNumber(281953);
@@ -151,21 +215,22 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 		plugin->AddRunNumber(281928);
 		plugin->AddRunNumber(281920);
 		plugin->AddRunNumber(281918);
-		//	  plugin->AddRunNumber(281916);
+		//	  plugin->AddRunNumber(281916);//SPD
 		//	  plugin->AddRunNumber(281915);
 		//	  plugin->AddRunNumber(281895);
 		//	  plugin->AddRunNumber(281894);
 		//	  plugin->AddRunNumber(281893);
 		//	  plugin->AddRunNumber(281892);
-		plugin->AddRunNumber(281756);
-		plugin->AddRunNumber(281755);
-		plugin->AddRunNumber(281754);
-		plugin->AddRunNumber(281753);
-		plugin->AddRunNumber(281751);
-		plugin->AddRunNumber(281750);
-		plugin->AddRunNumber(281741);
+
+		//		plugin->AddRunNumber(281756); //badTPCtrack
+		//		plugin->AddRunNumber(281755); //badTPCtrack
+		//		plugin->AddRunNumber(281754); //bad TPC
+		//		plugin->AddRunNumber(281753); //bad tpc
+		///		plugin->AddRunNumber(281751); //bad tpc
+		//		plugin->AddRunNumber(281750); //bad tpc
+		//		plugin->AddRunNumber(281741); //bad tpc
 		//	  plugin->AddRunNumber(281713); //bad FMD
-		plugin->AddRunNumber(281709);
+		//		plugin->AddRunNumber(281709);  //badtpc
 		//	  plugin->AddRunNumber(281707); //bad FMD
 		//	  plugin->AddRunNumber(281706); //bad FMD
 		//	  plugin->AddRunNumber(281705); //bad FMD
@@ -174,25 +239,309 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 		plugin->AddRunNumber(281583);
 		plugin->AddRunNumber(281581);
 		plugin->AddRunNumber(281580);
+
+		plugin->AddRunNumber(281574);
+		plugin->AddRunNumber(281569);
+		plugin->AddRunNumber(281568);
+		//		plugin->AddRunNumber(281563);  //but FMD
+		plugin->AddRunNumber(281562);
+		plugin->AddRunNumber(281557);
+		plugin->AddRunNumber(281511);
+		plugin->AddRunNumber(281509);
+		plugin->AddRunNumber(281477);
+		plugin->AddRunNumber(281475);
+		plugin->AddRunNumber(281450);
+		plugin->AddRunNumber(281449);
+		//		plugin->AddRunNumber(281446); //but FMD
+		plugin->AddRunNumber(281444);
+		plugin->AddRunNumber(281443);
+		plugin->AddRunNumber(281441);
+		plugin->AddRunNumber(281415);
+		plugin->AddRunNumber(281321);
+		plugin->AddRunNumber(281301);
+		plugin->AddRunNumber(281277);
+		plugin->AddRunNumber(281275);
+		plugin->AddRunNumber(281273);
+		plugin->AddRunNumber(281271);
+		//		plugin->AddRunNumber(281244); // but FMD
+		plugin->AddRunNumber(281243);
+		plugin->AddRunNumber(281242);
+		plugin->AddRunNumber(281241);
+		plugin->AddRunNumber(281240);
+		plugin->AddRunNumber(281213);
+		plugin->AddRunNumber(281212);
+		plugin->AddRunNumber(281191);
+		plugin->AddRunNumber(281190);
+		plugin->AddRunNumber(281189);
+		plugin->AddRunNumber(281181);
+		plugin->AddRunNumber(281179);
+		plugin->AddRunNumber(281081);
+		plugin->AddRunNumber(281080);
+		plugin->AddRunNumber(281062);
+		plugin->AddRunNumber(281061);
 		
-		/*
-		  281961, 281956, 281953, 281940, 281939, 281932, 281931, 281928, 281920, 281918, 281916, 
-		  281915, 281895, 281894, 281893, 281892, 281756, 281755, 281754, 281753, 281751, 281750, 
-		  281741, 281713, 281709, 281707, 281706, 281705, 281633, 281592, 281583, 281581, 281580, 
-		  281574, 281569, 281568, 281563, 281562, 281557, 281511, 281509, 281477, 281475, 281450, 
-		  281449, 281446, 281444, 281443, 281441, 281415, 281321, 281301, 281277, 281275, 281273, 
-		  281271, 281244, 281243, 281242, 281241, 281240, 281213, 281212, 281191, 281190, 281189, 
-		  281181, 281180, 281179, 281081, 281080, 281062, 281061, 281060, 281036, 281035, 281033, 
-		  281032, 280999, 280998, 280997, 280996, 280994, 280990, 280947, 280943, 280940, 280936, 
-		  280897, 280880, 280856, 280854, 280849, 280848, 280847, 280844, 280842, 280793, 280792, 
-		  280787, 280786, 280768, 280767, 280766, 280765, 280764, 280763, 280762, 280761, 280757, 
-		  280756, 280755, 280754, 280753, 280729, 280706, 280705, 280681, 280679, 280676, 280673, 
-		  280671, 280650, 280648, 280647, 280645, 280639, 280637, 280636, 280634, 280613, 280583, 
-		  280581, 280574, 280551, 280550, 280547, 280546, 280519, 280518, 280499, 280490, 280448, 
-		  280447, 280446, 280445, 280443, 280419, 280415, 280412, 280406, 280405, 280403, 280375, 
-		  280374, 280352, 280351, 280350, 280349, 280348, 280312, 280310, 280290, 280286, 280285, 
-		  280284, 280282
-		*/	  }
+		plugin->AddRunNumber(281060);
+		
+		//		plugin->AddRunNumber(281036); //but FMD
+		//plugin->AddRunNumber(281035); //bad FMD
+		//		plugin->AddRunNumber(281033); //bud FMD
+		//		plugin->AddRunNumber(281032);// bad FMD
+		plugin->AddRunNumber(280999);
+		plugin->AddRunNumber(280998);
+		plugin->AddRunNumber(280997);
+		//		plugin->AddRunNumber(280996); //bad FMD
+		plugin->AddRunNumber(280994);
+		plugin->AddRunNumber(280990);
+		plugin->AddRunNumber(280947);
+		//		plugin->AddRunNumber(280943); //bad FMD
+		plugin->AddRunNumber(280940);
+		plugin->AddRunNumber(280936);
+		plugin->AddRunNumber(280897);
+		plugin->AddRunNumber(280880);
+		plugin->AddRunNumber(280856);
+		//		plugin->AddRunNumber(280854); //bad FMD
+		plugin->AddRunNumber(280849);
+		plugin->AddRunNumber(280848);
+		plugin->AddRunNumber(280847);
+		plugin->AddRunNumber(280844);
+		plugin->AddRunNumber(280842);
+		plugin->AddRunNumber(280793);
+		plugin->AddRunNumber(280792);
+		plugin->AddRunNumber(280787);
+		plugin->AddRunNumber(280786);
+		plugin->AddRunNumber(280768);
+		plugin->AddRunNumber(280767);
+		plugin->AddRunNumber(280766);
+		plugin->AddRunNumber(280765);
+		plugin->AddRunNumber(280764);
+		plugin->AddRunNumber(280763);
+		plugin->AddRunNumber(280762);
+		plugin->AddRunNumber(280761);
+		plugin->AddRunNumber(280757);
+		plugin->AddRunNumber(280756);
+		plugin->AddRunNumber(280755);
+		plugin->AddRunNumber(280754);
+		plugin->AddRunNumber(280753);
+		
+		
+		plugin->AddRunNumber(280729);
+		plugin->AddRunNumber(280706);
+		plugin->AddRunNumber(280705);
+		plugin->AddRunNumber(280681);
+
+		//91below
+		plugin->AddRunNumber(280679);
+		plugin->AddRunNumber(280676);
+		plugin->AddRunNumber(280673);
+		plugin->AddRunNumber(280671);
+		plugin->AddRunNumber(280650);
+		plugin->AddRunNumber(280648);
+		plugin->AddRunNumber(280647);
+		plugin->AddRunNumber(280645);
+		plugin->AddRunNumber(280639);
+		plugin->AddRunNumber(280637);
+		plugin->AddRunNumber(280636);
+		plugin->AddRunNumber(280634);
+		plugin->AddRunNumber(280613);
+		plugin->AddRunNumber(280583);
+		plugin->AddRunNumber(280581);
+		plugin->AddRunNumber(280574);
+		plugin->AddRunNumber(280551);
+		plugin->AddRunNumber(280550);
+		plugin->AddRunNumber(280547);
+		plugin->AddRunNumber(280546);
+		plugin->AddRunNumber(280519);
+		plugin->AddRunNumber(280518);
+		plugin->AddRunNumber(280499);
+		//		plugin->AddRunNumber(280490); //bad FMD
+		plugin->AddRunNumber(280448);
+		plugin->AddRunNumber(280447);
+		plugin->AddRunNumber(280446);
+		plugin->AddRunNumber(280445);
+		plugin->AddRunNumber(280443);		
+		plugin->AddRunNumber(280419);
+		plugin->AddRunNumber(280415);
+		//		plugin->AddRunNumber(280412); // bad FMD
+		plugin->AddRunNumber(280406);
+		plugin->AddRunNumber(280405);
+		plugin->AddRunNumber(280403);
+		plugin->AddRunNumber(280375);
+		plugin->AddRunNumber(280374);
+		plugin->AddRunNumber(280352);
+		plugin->AddRunNumber(280351);
+		plugin->AddRunNumber(280350);
+		plugin->AddRunNumber(280349);
+		plugin->AddRunNumber(280348);
+		plugin->AddRunNumber(280312);
+		plugin->AddRunNumber(280310);
+		plugin->AddRunNumber(280290);
+		plugin->AddRunNumber(280286);
+		plugin->AddRunNumber(280285);
+		plugin->AddRunNumber(280284);
+		plugin->AddRunNumber(280282);
+		*/
+
+	plugin->AddRunNumber(281961);
+	//     plugin->AddRunNumber(281959 : return 1;
+	plugin->AddRunNumber(281956);
+	plugin->AddRunNumber(281953); //2;
+     plugin->AddRunNumber(281940);// 3;
+     plugin->AddRunNumber(281939);// 4;
+     plugin->AddRunNumber(281932);// 5;
+     plugin->AddRunNumber(281931);// 6;
+     plugin->AddRunNumber(281928);// 7;
+     plugin->AddRunNumber(281920);// 8;
+     plugin->AddRunNumber(281918);// 9;
+     plugin->AddRunNumber(281915);// 10;//
+     plugin->AddRunNumber(281895);// 11;//
+     plugin->AddRunNumber(281894);// 12;//
+     plugin->AddRunNumber(281892);// 13;//
+     plugin->AddRunNumber(281633);// 14;//
+     plugin->AddRunNumber(281583);// 15;
+       //     plugin->AddRunNumber(281581);// 12;
+       //     plugin->AddRunNumber(281580);// 13;
+     /*
+     plugin->AddRunNumber(281574);// 16;
+     plugin->AddRunNumber(281569);// 17;
+     plugin->AddRunNumber(281568);// 18;
+     plugin->AddRunNumber(281562);// 19;
+     plugin->AddRunNumber(281557);// 20;
+     plugin->AddRunNumber(281511);// 21;
+     plugin->AddRunNumber(281509);// 22;
+     plugin->AddRunNumber(281477);// 23;
+     plugin->AddRunNumber(281475);// 24;
+     plugin->AddRunNumber(281450);// 25;
+     plugin->AddRunNumber(281449);// 26;
+     plugin->AddRunNumber(281444);// 27;
+     plugin->AddRunNumber(281443);// 28;
+     plugin->AddRunNumber(281441);// 29;
+     plugin->AddRunNumber(281415);// 30;
+     plugin->AddRunNumber(281321);// 31;
+     plugin->AddRunNumber(281301);// 32;
+     plugin->AddRunNumber(281277);// 33;
+     plugin->AddRunNumber(281275);// 34;
+     plugin->AddRunNumber(281273);// 35;
+     plugin->AddRunNumber(281271);// 36;
+     plugin->AddRunNumber(281243);// 37;
+     plugin->AddRunNumber(281242);// 38;
+     plugin->AddRunNumber(281241);// 39;
+     plugin->AddRunNumber(281240);// 40;
+     plugin->AddRunNumber(281213);// 41;
+     plugin->AddRunNumber(281212);// 42;
+     plugin->AddRunNumber(281191);// 43;
+     plugin->AddRunNumber(281190);// 44;
+     plugin->AddRunNumber(281189);// 45;
+     plugin->AddRunNumber(281181);// 46;
+     plugin->AddRunNumber(281180);// 47;//
+     plugin->AddRunNumber(281179);// 48;
+     plugin->AddRunNumber(281081);// 49;
+     plugin->AddRunNumber(281080);// 50;
+     plugin->AddRunNumber(281062);// 51;
+     plugin->AddRunNumber(281061);// 52;
+     plugin->AddRunNumber(281060);// 53;
+     plugin->AddRunNumber(280999);// 54;
+     plugin->AddRunNumber(280998);// 55;
+     plugin->AddRunNumber(280997);// 56;
+     plugin->AddRunNumber(280994);// 57;
+     plugin->AddRunNumber(280990);// 58;
+     plugin->AddRunNumber(280947);// 59;
+     plugin->AddRunNumber(280940);// 60;
+     plugin->AddRunNumber(280936);// 61;
+     plugin->AddRunNumber(280897);// 62;
+     plugin->AddRunNumber(280890);// 63;//
+     plugin->AddRunNumber(280881);// 64;//
+     plugin->AddRunNumber(280880);// 65;
+     plugin->AddRunNumber(280856);// 66;
+     plugin->AddRunNumber(280849);// 67;
+     plugin->AddRunNumber(280848);// 68;
+     plugin->AddRunNumber(280847);// 69;
+     plugin->AddRunNumber(280845);// 70;//
+     plugin->AddRunNumber(280844);// 71;
+     plugin->AddRunNumber(280842);// 72;
+     plugin->AddRunNumber(280793);// 73;
+     plugin->AddRunNumber(280792);// 74;
+     plugin->AddRunNumber(280787);// 75;
+     plugin->AddRunNumber(280786);// 76;
+     plugin->AddRunNumber(280768);// 77;
+     plugin->AddRunNumber(280767);// 78;
+     plugin->AddRunNumber(280766);// 79;
+     plugin->AddRunNumber(280765);// 80;
+     plugin->AddRunNumber(280764);// 81;
+     plugin->AddRunNumber(280763);// 82;
+     plugin->AddRunNumber(280762);// 83;
+     plugin->AddRunNumber(280761);// 84;
+     plugin->AddRunNumber(280757);// 85;
+     plugin->AddRunNumber(280756);// 86;
+     plugin->AddRunNumber(280755);// 87;
+     plugin->AddRunNumber(280754);// 88;
+     plugin->AddRunNumber(280753);// 89;
+     plugin->AddRunNumber(280729);// 90;
+     plugin->AddRunNumber(280706);// 91;
+     plugin->AddRunNumber(280705);// 92;
+     plugin->AddRunNumber(280681);// 93;
+     plugin->AddRunNumber(280679);// 94;
+       //     plugin->AddRunNumber(280676);// 88;
+       //     plugin->AddRunNumber(280673);// 89;
+     plugin->AddRunNumber(280671);// 95;
+       //     plugin->AddRunNumber(280650);// 91;
+       //     plugin->AddRunNumber(280648);// 92;
+     plugin->AddRunNumber(280647);// 96;
+     plugin->AddRunNumber(280645);// 97;
+     plugin->AddRunNumber(280639);// 98;
+     plugin->AddRunNumber(280637);// 99;
+     plugin->AddRunNumber(280636);// 100;
+     plugin->AddRunNumber(280634);// 101;
+     plugin->AddRunNumber(280613);// 102;
+     plugin->AddRunNumber(280583);// 103;
+     plugin->AddRunNumber(280581);// 104;
+     plugin->AddRunNumber(280576);// 105;//
+     plugin->AddRunNumber(280575);// 106;//
+     plugin->AddRunNumber(280574);// 107;
+     plugin->AddRunNumber(280551);// 108;
+     plugin->AddRunNumber(280550);// 109;
+     plugin->AddRunNumber(280547);// 110;
+     plugin->AddRunNumber(280546);// 111;
+     plugin->AddRunNumber(280519);// 112;
+     plugin->AddRunNumber(280518);// 113;
+     plugin->AddRunNumber(280499);// 114;
+     plugin->AddRunNumber(280448);// 115;
+     plugin->AddRunNumber(280447);// 116;
+     plugin->AddRunNumber(280446);// 117;
+     plugin->AddRunNumber(280445);// 118;
+     plugin->AddRunNumber(280443);// 119;
+     plugin->AddRunNumber(280419);// 120;
+     plugin->AddRunNumber(280415);// 121;
+     plugin->AddRunNumber(280413);// 122;//
+     plugin->AddRunNumber(280406);// 123;
+     plugin->AddRunNumber(280405);// 124;
+     plugin->AddRunNumber(280403);// 125;
+     plugin->AddRunNumber(280375);// 126;
+     plugin->AddRunNumber(280374);// 127;
+       //     plugin->AddRunNumber(280352);// 122;
+     plugin->AddRunNumber(280351);// 128;
+     plugin->AddRunNumber(280350);// 129;
+     plugin->AddRunNumber(280349);// 130;
+     plugin->AddRunNumber(280348);// 131;
+     plugin->AddRunNumber(280312);// 132;
+     plugin->AddRunNumber(280310);// 133;
+     plugin->AddRunNumber(280290);// 134;
+     plugin->AddRunNumber(280286);// 135;
+     plugin->AddRunNumber(280285);// 136;
+     plugin->AddRunNumber(280284);// 137;
+     plugin->AddRunNumber(280283);// 138;
+     plugin->AddRunNumber(280282);// 139;
+
+     */
+      }else if(data=="LHC17j"){
+	plugin->SetGridDataDir("/alice/data/2017/LHC17j");
+	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
+	plugin->AddRunNumber(274671);
+	plugin->AddRunNumber(274669);
+	plugin->AddRunNumber(274667);
+
+	plugin->AddRunNumber(274653);
+	//plugin->AddRunNumber(274657);
+      }
 	}else{
 	  //   plugin->SetOutputSingleFolder("output");
 	  //   plugin->SetOutputToRunNo();
@@ -284,10 +633,21 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 	  }
 	}
 
-  //plugin->SetGridWorkingDir("test1_20190710_local_7");
-  plugin->SetGridWorkingDir("20190712/LHC17o_HMPP_TPCFMD");
+  //  plugin->SetGridWorkingDir("TPCFMD_LHC16qfast_part1_fmdcut5");
+  //  plugin->SetGridWorkingDir("TPCFMD_LHC16qfast_part2_fmdcut5");
+  //  plugin->SetGridWorkingDir("20112019_TPCTPC_LHC16qfast_part1");
+  //    plugin->SetGridWorkingDir("20112019_TPCTPC_LHC16qfast_part1_tpctrackonly");
+  //  plugin->SetGridWorkingDir("05122019_TPCTPC_LHC16qfast_part1_tpctrackonly");
+  //  plugin->SetGridWorkingDir("HI_PBPB_20200127_TPCFMD_part1");
+  //  plugin->SetGridWorkingDir("HI_PBPB_20200128_TPCFMD");
+  //  plugin->SetGridWorkingDir("HI_PBPB_Goodruns_20200128_TPCFMD");
+  plugin->SetGridWorkingDir("LIR_PBPB_Goodruns_20200128_TPCFMD");
   
+  //  plugin->SetGridWorkingDir("20190807_LHC17o_MBPP_FMDFMD");
+  //    plugin->SetGridWorkingDir("hogehoge4");
   // Declare alien output directory. Relative to working directory.
+  
+
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
   plugin->SetUser("ysekiguc");
   // Declare the analysis source files names separated by blancs. To be compiled runtime
@@ -314,16 +674,19 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
    plugin->SetAnalysisMacro("TaskPt.C");
 
    // Optionally set maximum number of input files/subjob (default 100, put 0 to ignore)
-   if(data=="LHC16q" )plugin->SetNrunsPerMaster(35);
+   //   if(data=="LHC16q" )plugin->SetNrunsPerMaster(35);
+   if(data=="LHC16q" )plugin->SetNrunsPerMaster(1);
    else if(data=="LHC15n")plugin->SetNrunsPerMaster(35);
    else if(  data=="LHC17f2b_fast")plugin->SetNrunsPerMaster(1);
+   //   else if(data.Contains("LHC17o")plugin->SetNrunsPerMaster(160);
    else plugin->SetNrunsPerMaster(1);
    
    if(isMC){
      plugin->SetSplitMaxInputFileNumber(700);
    }else{
      if(fAOD){
-        plugin->SetSplitMaxInputFileNumber(15);
+       plugin->SetSplitMaxInputFileNumber(50);
+       //       plugin->SetSplitMaxInputFileNumber(15);
 	 }else{
        plugin->SetSplitMaxInputFileNumber(100);
      }

@@ -57,6 +57,8 @@ public:
   virtual void SetFilterBit(Int_t mode) { ffilterbit = mode; }
   virtual void SetFMDcut(Bool_t mode) {fFMDcut=mode;}
   virtual void SetFMDcutpar(Int_t mode){fFMDcutmode=mode;}
+  virtual void SetPtdiff(Bool_t mode){fptdiff=mode;}
+  virtual void SetPtMax(Float_t mode){fPtMax=mode;}
   virtual void Setacceptancehole(Bool_t mode){fmakehole=mode;}
   virtual void SetAnalysisCent(TString mode) { fCentType = mode; }
   virtual void SetAnalysisCollisionType(TString mode) { fcollisiontype = mode; }
@@ -82,6 +84,7 @@ public:
 
   
 private:
+
   AliAnalysisTaskSEpPbCorrelationsForward(
       const AliAnalysisTaskSEpPbCorrelationsForward &det);
   AliAnalysisTaskSEpPbCorrelationsForward &
@@ -113,6 +116,7 @@ private:
   Double_t RangePhi_FMD(Double_t DPhi);
   Double_t RangePhi2(Double_t DPhi);
  Int_t      ConvertRunNumber(Int_t run);
+  Bool_t NotSPDClusterVsTrackletBG() {return !fUtils.IsSPDClusterVsTrackletBG(this->InputEvent());};
 
 /*
   void FillCorrelationTracksCentralForward(Double_t MultipOrCent, TObjArray *triggerArray,
@@ -140,6 +144,7 @@ private:
   Bool_t fQA;
   Bool_t fFMDcut;
   Int_t fFMDcutmode;
+  Bool_t fptdiff;
   Bool_t fmakehole;
   Bool_t fOnfly;
   TString fAnaMode;
@@ -161,7 +166,11 @@ private:
   AliPIDResponse *fPIDResponse; // PID Response
 
   Int_t ffilterbit;
+  Float_t fnoClusters;
+  Float_t fCutChargedDCAzMax;
+  Float_t fCutChargedDCAxyMax;  
   Double_t fPtMin;
+  Double_t fPtMax;
   Double_t fEtaMax;
   Double_t fEtaMaxExtra;
   Double_t fEtaMinExtra;
@@ -209,7 +218,7 @@ private:
   //	Double_t fPtMinDaughter
 
   AliEventCuts fEventCuts; 
-  AliAnalysisUtils* fUtils;
+  AliAnalysisUtils fUtils;
   AliAODEvent *fEvent; //  AOD Event
   AliMCEvent* mcEvent;
   AliAODVertex *lPrimaryBestVtx;
@@ -233,11 +242,13 @@ private:
   // Track cuts
   Double_t fMaxnSigmaTPCTOF;
 
-  // Global Histograms
+  // Globaal Histograms
   TH1F *fHistzvertex;
   TH1F *fHistCentrality;
   TH1F *fHistCentrality_beforecut;
   TH2F* fHistCentzvertex;
+  TH2F* fHistCentV0vsTracklets;
+  TH2F* fHistCentV0vsTrackletsbefore;
   TH2F* mixedDist;
   TH2F* mixedDist2;
   
@@ -248,6 +259,8 @@ private:
   AliTHn* fhistmcprim;
   TH2D*fhmcprimvzeta;
 
+  TH1F*frefetac;
+  TH1F*frefetaa;
   TH1F*frefvz;
   TH2D*fhcorr[10];
 
@@ -271,6 +284,10 @@ private:
   TH1F* fHist_FMDCMultRun;
 
   TH2D*  fhistfmdphiacc;
+  TH2F* fhFMDmultchannel;
+  TH2D* fhFMDmult_runbyrun_cside[31];
+  TH2D* fhFMDmult_runbyrun_aside[65];
+  
   AliTHn* fhistfmd;
   THnSparseF* fhistits;
   AliTHn* fhSecFMD;
@@ -281,6 +298,13 @@ private:
   TH2F*fFMDV0A_post;
   TH2F*fFMDV0C;
   TH2F*fFMDV0C_post;
+
+  TH2F*fFMDV0same;
+  TH2F*fFMDV0same_post;
+  TH2F*fFMDV0Asame;
+  TH2F*fFMDV0Asame_post;
+  TH2F*fFMDV0Csame;
+  TH2F*fFMDV0Csame_post;
 
   TH2F *fHist_vzeromult;
   TH2F *fHist_vzeromultEqweighted;
@@ -460,6 +484,8 @@ public:
   virtual Double_t Multiplicity() const { return fMultiplicity; }
 
 private:
+  // 
+  
   Short_t fCharge;    // Charge
   Float_t fEta;       // Eta
   Float_t fPhi;       // Phi

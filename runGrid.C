@@ -1,5 +1,5 @@
 {
-  TString gridMode="full";
+  TString gridMode="";
   Bool_t iAODAnalysis =kTRUE;
   Bool_t useMC =kFALSE;
   Bool_t frun2=kTRUE;
@@ -127,9 +127,19 @@
 	//chain->Add("$HOME/alicework/alice_data/2016/LHC16q/000265309/pass1_FAST/001/AliAOD.root");
 
 
-	//	chain->Add("~/workalice/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
+	//chain->Add("~/workalice/alice_data/2016/LHC16q/000265309/pass1_FAST/002/AliAOD.root");
+	//			chain->Add("~/workalice/alice_data/2017/LHC17o/000281961/pass1/AOD208/0001/AliAOD.root");
+
+
+	chain->Add("~/workalice/alice_data/2018/LHC18f/AliAOD_1.root");
+	chain->Add("~/workalice/alice_data/2018/LHC18f/AliAOD_2.root");
+	chain->Add("~/workalice/alice_data/2018/LHC18f/AliAOD_3.root");
+	chain->Add("~/workalice/alice_data/2018/LHC18f/AliAOD_4.root");
+
+	//	chain->Add("~/workalice/alice_data/2015/LHC15o/246276/AOD194/0001/AliAOD.root");// LHC15o
+	
 	//	chain->Add("$HOME/alicework/alice_data/2015/LHC15n/000244340/pass4/AOD/001/AliAOD.root");
-   	chain->Add("~/Downloads/AliAOD.root");
+   //	chain->Add("~/Downloads/AliAOD.root");
       }
     }
 
@@ -161,9 +171,12 @@
    
 
    if(frun2){
+     
      if(root6) gROOT->ProcessLine(".L $ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
      else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/macros/AddTaskPhysicsSelection.C");
      AddTaskPhysicsSelection(useMC,true);
+     
+
      if(root6) gROOT->ProcessLine(".L $ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
      else gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
 	 AddTaskMultSelection();
