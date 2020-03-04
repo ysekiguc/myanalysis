@@ -3,9 +3,12 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   //  char *data     = "LHC17f2b_fast";
   //  TString data     = "LHC17o";
   //  TString data     = "LHC16q";
+
   //  TString data     = "LHC15o_HIR";
-  TString data     = "LHC15o_LIR";
-  //  TString data     = "LHC18f";
+  //    TString data     = "LHC15o_LIR";
+  TString data     = "LHC17j";
+
+  //TString data     = "LHC18f";
   
   TString datatype = "FAST"  ;//Fast,wSDD,woSDD
   Int_t method   =  1;
@@ -19,9 +22,9 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   plugin->SetMergeViaJDL(1);
 
 
-  //   plugin->SetRunMode("full");
-   plugin->SetRunMode("terminate");
-   //plugin->SetRunMode("test");
+  plugin->SetRunMode("full");
+  //   plugin->SetRunMode("terminate");
+  //plugin->SetRunMode("test");
   
   //Set versions of used packages
   plugin->SetAPIVersion("V1.1x");
@@ -50,13 +53,14 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
       if(data=="LHC15o_HIR"){//PbPb run2
 		plugin->SetGridDataDir("/alice/data/2015/LHC15o");
 		plugin->SetDataPattern("*pass1/AOD194/*/AliAOD.root");
+		//		plugin->SetDataPattern("*pass1/AOD194/*/AliAOD.root");
 		//Good runs according to Freja's note
 		plugin->AddRunNumber(246276);
 		plugin->AddRunNumber(246275);
 		plugin->AddRunNumber(246185);
 		plugin->AddRunNumber(246153);
 		plugin->AddRunNumber(246089);
-		plugin->AddRunNumber(245963);
+		//		plugin->AddRunNumber(245963);
 		plugin->AddRunNumber(245954);
 		plugin->AddRunNumber(245833);
 		plugin->AddRunNumber(245705);
@@ -64,9 +68,10 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 
       }else if(data=="LHC15o_LIR"){//PbPb run2
 		plugin->SetGridDataDir("/alice/data/2015/LHC15o");
-		plugin->SetDataPattern("*pass5_lowIR/AOD194/*/AliAOD.root");
+		//		plugin->SetDataPattern("*pass5_lowIR/AOD194/*/AliAOD.root");
+		plugin->SetDataPattern("*pass3_lowIR_pidfix/AOD194/*/AliAOD.root");
 		//Good runs according to Freja's note
-		plugin->AddRunNumber(244917);
+		//		plugin->AddRunNumber(244917);
 		plugin->AddRunNumber(244918);
 		plugin->AddRunNumber(244975);
 		plugin->AddRunNumber(244980);
@@ -200,6 +205,14 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 		plugin->AddRunNumber(287077);
 		plugin->AddRunNumber(287137);
 		plugin->AddRunNumber(287185);
+      }else if(data=="LHC17j"){
+	plugin->SetGridDataDir("/alice/data/2017/LHC17j");
+	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
+	plugin->AddRunNumber(274667);
+	plugin->AddRunNumber(274653);
+	
+	
+	
       }else if(data=="LHC17o"){
 	plugin->SetGridDataDir("/alice/data/2017/LHC17o");
 	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
@@ -641,13 +654,15 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
   //  plugin->SetGridWorkingDir("HI_PBPB_20200127_TPCFMD_part1");
   //  plugin->SetGridWorkingDir("HI_PBPB_20200128_TPCFMD");
   //  plugin->SetGridWorkingDir("HI_PBPB_Goodruns_20200128_TPCFMD");
-  plugin->SetGridWorkingDir("LIR_PBPB_Goodruns_20200128_TPCFMD");
-  
-  //  plugin->SetGridWorkingDir("20190807_LHC17o_MBPP_FMDFMD");
-  //    plugin->SetGridWorkingDir("hogehoge4");
-  // Declare alien output directory. Relative to working directory.
+
+  //  plugin->SetGridWorkingDir("HIR_PBPB_Goodruns_20200226");
+  //  plugin->SetGridWorkingDir("LIR_PBPB_Goodruns_20200226");
+  plugin->SetGridWorkingDir("hogehoge_ppdata");
+
   
 
+  
+  // Declare alien output directory. Relative to working directory.
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
   plugin->SetUser("ysekiguc");
   // Declare the analysis source files names separated by blancs. To be compiled runtime
