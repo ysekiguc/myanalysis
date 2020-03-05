@@ -545,16 +545,23 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
      plugin->AddRunNumber(280282);// 139;
 
      */
-      }else if(data=="LHC17j"){
-	plugin->SetGridDataDir("/alice/data/2017/LHC17j");
-	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
-	plugin->AddRunNumber(274671);
-	plugin->AddRunNumber(274669);
-	plugin->AddRunNumber(274667);
-
-	plugin->AddRunNumber(274653);
-	//plugin->AddRunNumber(274657);
       }
+      
+      
+      //else if(data=="LHC17j"){
+      
+      //	plugin->SetGridDataDir("/alice/data/2017/LHC17j");
+
+      //	plugin->SetDataPattern("*pass1/AOD208/*/AliAOD.root");
+      //	plugin->AddRunNumber(274671);
+      //	plugin->AddRunNumber(274669);
+      //	plugin->AddRunNumber(274667);
+
+      //	plugin->AddRunNumber(274653);
+      //	//plugin->AddRunNumber(274657);
+      //      }
+
+
 	}else{
 	  //   plugin->SetOutputSingleFolder("output");
 	  //   plugin->SetOutputToRunNo();
@@ -657,11 +664,12 @@ AliAnalysisGrid* CreateAlienHandler(Bool_t isMC,Bool_t fAOD)
 
   //  plugin->SetGridWorkingDir("HIR_PBPB_Goodruns_20200226");
   //  plugin->SetGridWorkingDir("LIR_PBPB_Goodruns_20200226");
-  plugin->SetGridWorkingDir("hogehoge_ppdata");
+  //  plugin->SetGridWorkingDir("hogehoge_ppdata");
+  plugin->SetGridWorkingDir("LHC17j_lowrateppdata");
 
-  
 
-  
+
+
   // Declare alien output directory. Relative to working directory.
   plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output
   plugin->SetUser("ysekiguc");
